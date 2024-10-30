@@ -1,0 +1,112 @@
+body {
+    background-color: #dddddd;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+}
+
+.header {
+    background-color: white;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.header .title {
+    font-weight: bold;
+    color: black;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+.login-container {
+    text-align: center;
+    margin-top: 60px;
+    /* ヘッダーの高さを考慮 */
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+input {
+    width: 250px;
+    height: 30px;
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: #dddddd;
+    border: 1px solid #9a9a9a;
+    color: #9a9a9a;
+    margin-bottom: 15px;
+    /* 入力欄同士の隙間を追加 */
+}
+
+input::placeholder {
+    color: #9a9a9a;
+}
+
+input:focus,
+input:not(:placeholder-shown) {
+    color: black;
+    /* 入力時の文字色を黒色に変更 */
+}
+
+button {
+    width: 250px;
+    /* 入力欄と同じ幅に変更 */
+    height: 30px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: blue;
+}
+
+.error {
+    color: red;
+    margin-bottom: 15px;
+    width: 250px;
+    /* エラーメッセージの幅を入力欄と同じにする */
+    text-align: center;
+    /* エラーメッセージを中央揃えにする */
+    white-space: normal;
+    /* 折り返しを許可 */
+}
+
+.register-info {
+    margin-top: 15px;
+    color: #9a9a9a;
+    font-size: 12px;
+}
+
+.register-link {
+    margin-top: 5px;
+}
+
+.register-link a {
+    color: blue;
+    text-decoration: none;
+    /* アンダーラインを削除 */
+    font-size: 14px;
+}

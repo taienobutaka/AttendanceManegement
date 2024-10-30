@@ -1,0 +1,87 @@
+body {
+    background-color: #dddddd;
+    height: 100vh;
+    margin: 0;
+}
+
+.header {
+    background-color: white;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .title {
+    font-weight: bold;
+    color: black;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+.header .nav a {
+    color: black;
+    margin-right: 50px;
+    text-decoration: none;
+}
+
+.container {
+    padding: 20px;
+}
+
+.member-list {
+    margin-bottom: 20px;
+    border-top: 1px solid black;
+}
+
+.member-list .header-row,
+.member-list .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid black;
+}
+
+.member-list .header-item {
+    font-weight: bold;
+    color: black;
+    flex: 1;
+    text-align: left;
+    padding-left: 60px;
+}
+
+.member-list .data-item {
+    color: black;
+    flex: 1;
+    text-align: left;
+    padding-left: 60px;
+}
+
+.member-list .data-row:last-child {
+    border-bottom: none;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    background-color: white;
+    border: 1px solid #00a0dc;
+    color: #00a0dc;
+    padding: 5px 15px;
+    margin: 0;
+    text-decoration: none;
+    border-radius: 0;
+}
+
+.pagination .page-link.active {
+    background-color: #00a0dc;
+    color: white;
+}

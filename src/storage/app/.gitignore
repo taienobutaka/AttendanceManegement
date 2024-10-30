@@ -1,0 +1,5 @@
+*
+!public/
+!.gitignore
+# Docker MySQL data directory
+docker/mysql/data/

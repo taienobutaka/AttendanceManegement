@@ -1,0 +1,115 @@
+body {
+    background-color: #dddddd;
+    height: 100vh;
+    margin: 0;
+}
+
+.header {
+    background-color: white;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .title {
+    font-weight: bold;
+    color: black;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+.header .nav a {
+    color: black;
+    margin-right: 50px;
+    text-decoration: none;
+}
+
+.container {
+    padding: 20px;
+}
+
+.date-navigation {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.date-navigation .prev-button,
+.date-navigation .next-button {
+    background-color: white;
+    border: 1px solid #00a0dc;
+    border-radius: 5px;
+    color: #00a0dc;
+    padding: 5px 10px;
+}
+
+.date-navigation .date {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 20px 20px;
+}
+
+.attendance-list {
+    margin-bottom: 20px;
+    border-top: 1px solid black;
+    /* 項目の上に黒色の線を追加 */
+}
+
+.attendance-list .header-row,
+.attendance-list .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid black;
+    /* 項目の上下に黒色の線を追加 */
+}
+
+.attendance-list .header-item {
+    font-weight: bold;
+    color: black;
+    flex: 1;
+    /* 各項目を均等に配置 */
+    text-align: center;
+    /* 項目を中央揃え */
+}
+
+.attendance-list .data-item {
+    color: black;
+    flex: 1;
+    /* 各項目を均等に配置 */
+    text-align: center;
+    /* 項目を中央揃え */
+}
+
+.attendance-list .data-row:last-child {
+    border-bottom: none;
+    /* 一番下の黒色の線を削除 */
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    background-color: white;
+    border: 1px solid #00a0dc;
+    color: #00a0dc;
+    padding: 5px 15px;
+    margin: 0;
+    /* ボタン間の隙間をなくす */
+    text-decoration: none;
+    border-radius: 0;
+    /* ボタン間の隙間をなくすために角を丸めない */
+}
+
+.pagination .page-link.active {
+    background-color: #00a0dc;
+    color: white;
+}
