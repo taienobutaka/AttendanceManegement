@@ -69,3 +69,4 @@ php artisan db:seed
 ## URL
 - 開発環境：http://localhost/
 - phpMyAdmin:：http://localhost:8080/
+- 実行環境でメール認証を使用する際は、.envファイルの下記の設定を変更してください。
