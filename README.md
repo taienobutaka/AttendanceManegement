@@ -54,7 +54,7 @@ php artisan db:seed
 ![スクリーンショット 2024-09-27 113511](https://github.com/user-attachments/assets/9fdbbb6a-0d28-40f2-9a6f-e25c4e64073c)
 
 ## 機能一覧
-![スクリーンショット 2024-11-04 215023](https://github.com/user-attachments/assets/c5e37944-3d5a-4978-8b15-cca73ed82fae)
+![スクリーンショット 2024-11-07 102701](https://github.com/user-attachments/assets/721acbe9-e691-41f1-9111-9134fe18f1c3)
 
 ## テーブル仕様
 ![スクリーンショット 2024-11-04 215120](https://github.com/user-attachments/assets/aca458f9-1b0e-4e88-9a4b-ef8e0b74ef80)
