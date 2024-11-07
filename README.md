@@ -2,7 +2,17 @@
 
 メール認証・パスワード認証によりログインして、勤務時間・休憩時間を操作して管理できます。
 
+![スクリーンショット 2024-11-07 092420](https://github.com/user-attachments/assets/d006565b-0802-4e5c-a675-04aa8da0e037)
+
+![スクリーンショット 2024-11-07 092441](https://github.com/user-attachments/assets/43fe0c57-af22-496d-95e8-1a7f0a688bf4)
+
 ![スクリーンショット 2024-11-03 222912](https://github.com/user-attachments/assets/ca0aeab2-88d5-4ab8-9fc8-34537c9a5624)
+
+![スクリーンショット 2024-11-07 092546](https://github.com/user-attachments/assets/123d3d2d-a072-438d-b6b1-219e091703c7)
+
+![スクリーンショット 2024-11-07 092605](https://github.com/user-attachments/assets/760d72e3-f9da-4d64-a5f4-355464723ebe)
+
+![スクリーンショット 2024-11-07 092639](https://github.com/user-attachments/assets/98d8723a-09ab-4488-8e24-79f86ab0e02b)
 
 ## 環境構築
 
