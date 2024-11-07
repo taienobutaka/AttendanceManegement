@@ -53,9 +53,6 @@ php artisan db:seed
 ## ER図
 ![スクリーンショット 2024-09-27 113511](https://github.com/user-attachments/assets/9fdbbb6a-0d28-40f2-9a6f-e25c4e64073c)
 
-## ページ一覧
-![スクリーンショット 2024-11-04 215047](https://github.com/user-attachments/assets/1835844d-5eda-4728-aefb-2afdfea23fbf)
-
 ## 機能一覧
 ![スクリーンショット 2024-11-04 215023](https://github.com/user-attachments/assets/c5e37944-3d5a-4978-8b15-cca73ed82fae)
 
