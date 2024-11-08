@@ -71,7 +71,7 @@ php artisan db:seed
 
 ## 基本設計
 ![スクリーンショット 2024-11-08 093539](https://github.com/user-attachments/assets/b2122e26-4375-4510-bec8-e8bf0f229041)
-![スクリーンショット 2024-11-04 215222](https://github.com/user-attachments/assets/668caaab-1341-4766-a701-d2178cb74860)
+![スクリーンショット 2024-11-08 093955](https://github.com/user-attachments/assets/ce485481-ff97-41d2-bd09-6a3874a5f7e1)
 
 ## URL
 - 開発環境：http://localhost/
