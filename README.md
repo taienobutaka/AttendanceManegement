@@ -70,7 +70,7 @@ php artisan db:seed
 ![スクリーンショット 2024-11-04 215120](https://github.com/user-attachments/assets/aca458f9-1b0e-4e88-9a4b-ef8e0b74ef80)
 
 ## 基本設計
-![スクリーンショット 2024-11-04 215156](https://github.com/user-attachments/assets/e3afcd96-3aa2-4b37-9559-6ac02f5a64fa)
+![スクリーンショット 2024-11-08 093539](https://github.com/user-attachments/assets/b2122e26-4375-4510-bec8-e8bf0f229041)
 ![スクリーンショット 2024-11-04 215222](https://github.com/user-attachments/assets/668caaab-1341-4766-a701-d2178cb74860)
 
 ## URL
