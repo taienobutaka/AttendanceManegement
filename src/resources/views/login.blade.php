@@ -15,13 +15,19 @@
         @if ($errors->has('login'))
             <div class="error">{{ $errors->first('login') }}</div>
         @endif
-        <form action="/login" method="POST">
+        <form action="/login" method="POST" novalidate>
             @csrf
             <div class="form-group">
-                <input type="email" id="email" name="email" placeholder="メールアドレス" required>
+                <input type="email" id="email" name="email" placeholder="メールアドレス">
+                @error('email')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="パスワード" required>
+                <input type="password" id="password" name="password" placeholder="パスワード">
+                @error('password')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
             </div>
             <button type="submit">ログイン</button>
         </form>

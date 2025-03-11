@@ -21,7 +21,7 @@ class RestController extends Controller
             $rest->save();
         }
 
-        session(['rest_started' => true]);
+        session(['rest_started' => true, 'all_disabled' => false]);
 
         return redirect('/');
     }
@@ -43,7 +43,7 @@ class RestController extends Controller
             }
         }
 
-        session(['rest_started' => false]);
+        session(['rest_started' => false, 'all_disabled' => false]);
 
         return redirect('/');
     }

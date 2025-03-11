@@ -17,28 +17,28 @@
                 {{ session('message') }}
             </div>
         @endif
-        <form action="{{ route('register.post') }}" method="POST">
+        <form action="{{ route('register.post') }}" method="POST" novalidate>
             @csrf
             <div class="form-group">
-                <input type="text" id="name" name="name" placeholder="名前" value="{{ old('name') }}" required>
+                <input type="text" id="name" name="name" placeholder="名前" value="{{ old('name') }}">
                 @error('name')
                     <div class="field-error">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
-                <input type="email" id="email" name="email" placeholder="メールアドレス" value="{{ old('email') }}" required>
+                <input type="email" id="email" name="email" placeholder="メールアドレス" value="{{ old('email') }}">
                 @error('email')
                     <div class="field-error">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="パスワード" required>
+                <input type="password" id="password" name="password" placeholder="パスワード">
                 @error('password')
                     <div class="field-error">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
-                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="確認用パスワード" required>
+                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="確認用パスワード">
                 @error('password_confirmation')
                     <div class="field-error">{{ $message }}</div>
                 @enderror

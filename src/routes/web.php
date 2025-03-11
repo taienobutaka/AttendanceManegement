@@ -20,5 +20,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/break/start', [RestController::class, 'startRest']);
     Route::get('/break/end', [RestController::class, 'endRest']);
     Route::get('/members', [AttendanceController::class, 'getMembers'])->name('members.index'); // 会員一覧
-    Route::get('/user', [AttendanceController::class, 'getUserAttendance'])->name('user.attendance'); // 勤怠一覧
+    Route::get('/user', [AttendanceController::class, 'getUserAttendance'])->name('user.attendance'); // ログインユーザー勤務一覧
+    Route::get('/users/{id}', [AttendanceController::class, 'getUserAttendanceById'])->name('user.attendance.byId'); // ユーザー勤務詳細一覧
 });
