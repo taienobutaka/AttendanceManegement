@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   nginx:
-    image: nginx:1.21.1
+    image: nginx:1.24.0
     ports:
       - "80:80"
     volumes:
@@ -17,7 +17,7 @@ services:
       - ./src:/var/www/
 
   mysql:
-    image: mysql:8.0.26
+    image: mysql:8.0.41
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel_db
