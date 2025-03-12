@@ -17,12 +17,5 @@ class UserSeeder extends Seeder
             $attendance = Attendance::factory()->create(['user_id' => $user->id]);
             Rest::factory()->create(['attendance_id' => $attendance->id]);
         });
-
-        // テストユーザーの追加
-        User::create([
-            'name' => 'test',
-            'email' => 'test@example.com',
-            'password' => Hash::make('00000000'),
-        ]);
     }
 }

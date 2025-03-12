@@ -106,9 +106,12 @@ services:
 ```
 **Laravel環境構築**
 1. `docker-compose exec php bash`
-2. `composer install`
-3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成
-4. .envに以下の環境変数を追加
+2. 依存関係を更新します<br />
+`composer update`
+3. 依存関係をインストールします<br />
+`composer install`
+4. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成
+5. .envに以下の環境変数を追加
 ``` text
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -167,12 +170,11 @@ php artisan db:seed
 ![スクリーンショット 2024-11-08 093539](https://github.com/user-attachments/assets/b2122e26-4375-4510-bec8-e8bf0f229041)
 ![スクリーンショット 2024-11-08 093955](https://github.com/user-attachments/assets/ce485481-ff97-41d2-bd09-6a3874a5f7e1)
 
+## 単体テスト
+PHPUnitを使用して、テスト用の.envファイルとデータベースを準備してアクセス・データベースなどの単体テストを行いました。
+
 ## ダミーデータ
-```
-名前  test
-メールアドレス  test@gmail.com
-パスワード  00000000
-```
+Seederファイルに２０人分のダミーデータが入っております。
 
 ## URL
 - 開発環境：http://localhost/
