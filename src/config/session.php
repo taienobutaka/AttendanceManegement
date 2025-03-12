@@ -31,7 +31,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => 1440, // セッションの有効期限を24時間に設定
 
     'expire_on_close' => false,
 
