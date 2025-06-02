@@ -181,3 +181,4 @@ Seederファイルに２０人分のダミーデータが入っております�
 - phpMyAdmin:：http://localhost:8080/
 - MailHog : http://localhost:8025
 - 実行環境でメール認証を使用する際は、.envファイルの下記の設定を変更してください。
+# AttendanceManegementTest
