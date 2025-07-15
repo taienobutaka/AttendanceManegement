@@ -142,13 +142,13 @@ npm-install:
 # フロントエンドビルド
 npm-build:
 	@echo "=== フロントエンドビルド実行 ==="
-	docker-compose exec php npm run build
+	docker-compose exec php npm run production
 	@echo "=== ビルド完了 ==="
 
 # 開発用ビルド（ウォッチ）
 npm-dev:
 	@echo "=== 開発用ビルド（ウォッチモード）開始 ==="
-	docker-compose exec php npm run dev
+	docker-compose exec php npm run development
 
 # 完全クリーンアップ
 clean:
