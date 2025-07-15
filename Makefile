@@ -13,6 +13,13 @@ init:
 	
 	docker-compose up -d --build
 
+	@echo "=== PHPコンテナの起動待ち ==="
+	@until docker-compose exec php php -v > /dev/null 2>&1; do \
+		echo "Waiting for PHP container..."; \
+		sleep 2; \
+	done
+	@sleep 3
+
 	@echo "=== MySQLの起動待ち ==="
 	@until docker-compose exec mysql mysqladmin ping -hmysql -uroot -proot --silent; do \
 		echo "Waiting for MySQL..."; \
@@ -142,13 +149,13 @@ npm-install:
 # フロントエンドビルド
 npm-build:
 	@echo "=== フロントエンドビルド実行 ==="
-	docker-compose exec php npm run production
+	docker-compose exec php npm run build
 	@echo "=== ビルド完了 ==="
 
 # 開発用ビルド（ウォッチ）
 npm-dev:
 	@echo "=== 開発用ビルド（ウォッチモード）開始 ==="
-	docker-compose exec php npm run watch
+	docker-compose exec php npm run dev
 
 # 完全クリーンアップ
 clean:
