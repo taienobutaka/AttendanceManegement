@@ -142,12 +142,16 @@ npm-install:
 # フロントエンドビルド
 npm-build:
 	@echo "=== フロントエンドビルド実行 ==="
+	@echo "=== node_modules改行コード修正 ==="
+	docker-compose exec php find /var/www/node_modules/.bin -type f -exec sed -i 's/\r$$//' {} \; 2>/dev/null || true
 	docker-compose exec php npm run production
 	@echo "=== ビルド完了 ==="
 
 # 開発用ビルド（ウォッチ）
 npm-dev:
 	@echo "=== 開発用ビルド（ウォッチモード）開始 ==="
+	@echo "=== node_modules改行コード修正 ==="
+	docker-compose exec php find /var/www/node_modules/.bin -type f -exec sed -i 's/\r$$//' {} \; 2>/dev/null || true
 	docker-compose exec php npm run development
 
 # 完全クリーンアップ

@@ -26,4 +26,4 @@ yarn-error.log
 /.vscode
 
 # Docker MySQL data directory
-docker/mysql/data/
+docker/mysql/data/src/node_modules/
