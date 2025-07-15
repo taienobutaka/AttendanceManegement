@@ -50,15 +50,8 @@ init:
 	sed -i 's/^MAIL_FROM_ADDRESS=.*/MAIL_FROM_ADDRESS=attendance@example.com/' src/.env
 	sed -i 's/^MAIL_FROM_NAME=.*/MAIL_FROM_NAME="出席管理システム"/' src/.env
 
-	@echo "=== ストレージディレクトリ作成 ==="
-	@mkdir -p ./src/storage/app/public/img
-	@mkdir -p ./src/storage/app/public/uploads
-
 	@echo "=== アプリケーションキー生成 ==="
 	docker-compose exec php php artisan key:generate
-
-	@echo "=== ストレージリンク作成 ==="
-	docker-compose exec php php artisan storage:link
 
 	@echo "=== 権限設定 ==="
 	docker-compose exec php chmod -R 777 storage bootstrap/cache
