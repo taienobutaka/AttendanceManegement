@@ -121,5 +121,6 @@
             <button type="submit" id="end-rest" class="btn">休憩終了</button>
         </form>
     </div>
+    @include('partials.chatbot')
 </body>
 </html>

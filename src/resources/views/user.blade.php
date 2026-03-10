@@ -58,5 +58,6 @@
             if (closeBtn) closeBtn.addEventListener('click', function() { header.classList.remove('nav-open'); });
         })();
     </script>
+    @include('partials.chatbot')
 </body>
 </html>
