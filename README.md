@@ -92,6 +92,12 @@ Makefile を使用した自動セットアップが利用可能です。
    - **phpMyAdmin**: http://localhost:8080
    - **MailHog**: http://localhost:8025
 
+**ダミーデータ（ログイン例）**<br />
+シーディングで作成される固定ユーザーでログインできます。<br />
+- 名前: 山田太郎<br />
+- メールアドレス: `yamada@example.com`<br />
+- パスワード: `password`
+
 ### 📋 Makefile コマンド一覧
 
 | コマンド           | 説明                     |
