@@ -85,3 +85,33 @@ body {
     color: white;
     cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 16px;
+        padding: 16px;
+        height: auto;
+        min-height: calc(100vh - 200px);
+        justify-content: center;
+        justify-items: center;
+    }
+
+    .container form {
+        width: 100%;
+        max-width: 250px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .user-greeting {
+        font-size: 1.2em;
+        padding: 0 16px;
+    }
+}

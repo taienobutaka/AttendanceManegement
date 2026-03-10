@@ -1,0 +1,160 @@
+/**
+ * SP用レスポンシブヘッダー（三本線アイコン・ハンバーガーメニュー）
+ */
+
+/* ハンバーガーボタン：PCでは非表示 */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #000;
+    border-radius: 1px;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* SP時：ヘッダー内でアイコンが切れないようにする */
+@media (max-width: 768px) {
+    .header {
+        padding-left: 16px;
+        padding-right: 12px;
+        box-sizing: border-box;
+        min-width: 0;
+    }
+
+    .header .title {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-left: 0;
+    }
+
+    .hamburger-btn {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .header .nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(280px, 85vw);
+        max-width: 100%;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        padding-top: 56px;
+        padding-bottom: 24px;
+        padding-left: 24px;
+        padding-right: 24px;
+        background-color: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.25s ease;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    .header.nav-open .nav {
+        transform: translateX(0);
+    }
+
+    .nav-close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: transparent;
+        font-size: 24px;
+        line-height: 1;
+        color: #000;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .nav-close-btn:hover {
+        opacity: 0.7;
+    }
+
+    .header .nav a {
+        display: block;
+        width: 100%;
+        padding: 14px 0;
+        margin: 0;
+        border-bottom: 1px solid #eee;
+        color: #000;
+        text-decoration: none;
+    }
+
+    .nav-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+    }
+
+    .header.nav-open .nav-overlay {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .nav-overlay {
+        display: none !important;
+    }
+
+    .nav-close-btn {
+        display: none !important;
+    }
+}
+
+/* SP用：横スクロール防止・一覧テーブル対応 */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .member-list,
+    .attendance-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    /* SP用：時間表示は時・分のみ（秒を非表示） */
+    .time-seconds {
+        display: none !important;
+    }
+}

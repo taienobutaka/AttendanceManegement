@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Test;
+use Faker\Factory as FakerFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TestFactory extends Factory
@@ -11,8 +12,10 @@ class TestFactory extends Factory
 
     public function definition()
     {
+        $fakerJa = FakerFactory::create('ja_JP');
+
         return [
-            'name' => $this->faker->name,
+            'name' => $fakerJa->lastName . ' ' . $fakerJa->firstName,
         ];
     }
 }

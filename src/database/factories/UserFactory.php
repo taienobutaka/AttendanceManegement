@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Faker\Factory as FakerFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -12,10 +12,12 @@ class UserFactory extends Factory
 
     public function definition()
     {
+        $fakerJa = FakerFactory::create('ja_JP');
+
         return [
-            'name' => $this->faker->lastName . ' ' . $this->faker->firstName, // 漢字の名前を生成
+            'name' => $fakerJa->lastName . ' ' . $fakerJa->firstName,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => bcrypt('password'), // パスワードをハッシュ化
+            'password' => bcrypt('password'),
         ];
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>勤怠入力画面</title>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sp-header.css') }}">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const startAttendanceButton = document.getElementById('start-attendance');
@@ -79,15 +80,28 @@
 
             updateButtonStates();
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            var header = document.getElementById('header');
+            if (!header) return;
+            var btn = header.querySelector('.hamburger-btn');
+            var overlay = document.getElementById('nav-overlay');
+            var closeBtn = header.querySelector('.nav-close-btn');
+            if (btn) btn.addEventListener('click', function() { header.classList.toggle('nav-open'); });
+            if (overlay) overlay.addEventListener('click', function() { header.classList.remove('nav-open'); });
+            if (closeBtn) closeBtn.addEventListener('click', function() { header.classList.remove('nav-open'); });
+        });
     </script>
 </head>
 <body>
-    <div class="header">
+    <div class="header" id="header">
         <div class="title">Atte</div>
+        <button type="button" class="hamburger-btn" aria-label="メニュー"><span></span><span></span><span></span></button>
+        <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
         <div class="nav">
+            <button type="button" class="nav-close-btn" aria-label="メニューを閉じる">✕</button>
             <a href="/">ホーム</a>
             <a href="/members">会員一覧</a>
-            <a href="{{ route('user.attendance') }}">勤務一覧</a> <!-- 追加 -->
+            <a href="{{ route('user.attendance') }}">勤務一覧</a>
             <a href="{{ route('attendance.list') }}">日付一覧</a>
             <a href="/logout">ログアウト</a>
         </div>

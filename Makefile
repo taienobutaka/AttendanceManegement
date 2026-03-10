@@ -145,7 +145,7 @@ npm-build:
 	@echo "=== node_modules改行コード修正 ==="
 	docker-compose exec php find /var/www/node_modules/.bin -type f -exec dos2unix {} \; 2>/dev/null || true
 	docker-compose exec php find /var/www/node_modules/.bin -type f -exec sed -i 's/\r$$//' {} \; 2>/dev/null || true
-	docker-compose exec php chmod +x /var/www/node_modules/.bin/*
+	docker-compose exec php sh -c 'test -d /var/www/node_modules/.bin && chmod +x /var/www/node_modules/.bin/* 2>/dev/null || true'
 	docker-compose exec php npm run production
 	@echo "=== ビルド完了 ==="
 
@@ -155,7 +155,7 @@ npm-dev:
 	@echo "=== node_modules改行コード修正 ==="
 	docker-compose exec php find /var/www/node_modules/.bin -type f -exec dos2unix {} \; 2>/dev/null || true
 	docker-compose exec php find /var/www/node_modules/.bin -type f -exec sed -i 's/\r$$//' {} \; 2>/dev/null || true
-	docker-compose exec php chmod +x /var/www/node_modules/.bin/*
+	docker-compose exec php sh -c 'test -d /var/www/node_modules/.bin && chmod +x /var/www/node_modules/.bin/* 2>/dev/null || true'
 	docker-compose exec php npm run development
 
 # 完全クリーンアップ

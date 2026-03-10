@@ -2,22 +2,35 @@ body {
     background-color: #dddddd;
     height: 100vh;
     margin: 0;
+    overflow-x: hidden;
+}
+
+html {
+    overflow-x: hidden;
 }
 
 .header {
     background-color: white;
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 12px 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .header .title {
     font-weight: bold;
     color: black;
     font-size: 24px;
-    margin-left: 20px;
+    margin-left: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.header .hamburger-btn {
+    flex-shrink: 0;
 }
 
 .header .nav a {
@@ -28,17 +41,30 @@ body {
 
 .container {
     padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
 }
 
 .member-list {
     margin-bottom: 20px;
     border-top: 1px solid black;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .member-list .header-row,
 .member-list .data-row {
     display: flex;
     justify-content: space-between;
+    flex-wrap: nowrap;
+    min-width: max-content;
     padding: 10px 0;
     border-bottom: 1px solid black;
 }
@@ -47,15 +73,25 @@ body {
     font-weight: bold;
     color: black;
     flex: 1;
+    min-width: 0;
     text-align: left;
     padding-left: 60px;
+    white-space: nowrap;
+}
+
+/* 「勤務一覧」列は最小幅を確保して切れないようにする */
+.member-list .header-item:nth-child(3),
+.member-list .data-item:nth-child(3) {
+    min-width: 80px;
 }
 
 .member-list .data-item {
     color: black;
     flex: 1;
+    min-width: 0;
     text-align: left;
     padding-left: 60px;
+    white-space: nowrap;
 }
 
 .member-list .data-row:last-child {
