@@ -65,7 +65,7 @@ jobs:
             sudo git reset --hard origin/main
             echo "==> cd src && composer install"
             cd src
-            sudo composer install --no-dev --optimize-autoloader --no-interaction
+            sudo /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
             echo "==> migrate"
             sudo php artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
