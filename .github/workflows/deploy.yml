@@ -63,16 +63,17 @@ jobs:
             echo "==> git fetch & reset"
             sudo git fetch origin main
             sudo git reset --hard origin/main
-            echo "==> ensure Composer"
-            if [ ! -x /usr/local/bin/composer ]; then
+            echo "==> ensure Composer (PATH に依存しない)"
+            if ! sudo test -x /usr/local/bin/composer; then
               echo "Installing Composer..."
-              sudo bash -c 'cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer'
+              sudo bash -c 'cd /tmp && curl -sS https://getcomposer.org/installer | /usr/bin/php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer'
             fi
+            sudo /usr/local/bin/composer --version || { echo "::error::Composer の確認に失敗しました。" && exit 1; }
             echo "==> cd src && composer install"
             cd src
             sudo /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
             echo "==> migrate"
-            sudo php artisan migrate --force
+            sudo /usr/bin/php artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
             echo "==> restart php-fpm nginx"
