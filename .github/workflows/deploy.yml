@@ -30,18 +30,21 @@ jobs:
       - name: Get EC2 IP from SSM
         id: ec2
         run: |
-          IP=$(aws ssm get-parameter --name "/atte/test/ec2_public_ip" --query Parameter.Value --output text 2>/dev/null || echo "")
+          set -e
+          IP=$(aws ssm get-parameter --name "/atte/test/ec2_public_ip" --query Parameter.Value --output text --region ap-northeast-1)
           echo "ip=$IP" >> $GITHUB_OUTPUT
           if [ -z "$IP" ]; then
-            echo "::warning::SSM に EC2 IP がありません。先に Terraform を apply してください。"
+            echo "::error::SSM に EC2 IP がありません。先に Terraform を apply してください。"
             exit 1
           fi
+          echo "EC2 IP: $IP"
 
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key.pem
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key.pem
           chmod 600 ~/.ssh/deploy_key.pem
+          head -1 ~/.ssh/deploy_key.pem | grep -q "BEGIN.*PRIVATE KEY" || (echo "::error::SSH_PRIVATE_KEY の形式が不正です。Terraform の ec2_private_key_pem を改行含めてそのまま登録してください。" && exit 1)
           ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Deploy to EC2
@@ -49,18 +52,25 @@ jobs:
           EC2_IP: ${{ steps.ec2.outputs.ip }}
           GITHUB_REPO: ${{ github.repository }}
         run: |
-          ssh -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new ec2-user@$EC2_IP << REMOTE
+          ssh -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 ec2-user@$EC2_IP << REMOTE
             set -e
-            cd /var/www/html || exit 1
+            echo "==> cd /var/www/html"
+            cd /var/www/html || { echo "::error::/var/www/html がありません。EC2 の user_data を確認してください。" && exit 1; }
             if [ ! -d .git ]; then
+              echo "==> git clone (初回)"
               sudo git clone -b main https://github.com/${GITHUB_REPO}.git .
             fi
+            echo "==> git fetch & reset"
             sudo git fetch origin main
             sudo git reset --hard origin/main
+            echo "==> cd src && composer install"
             cd src
             sudo composer install --no-dev --optimize-autoloader --no-interaction
+            echo "==> migrate"
             sudo php artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
+            echo "==> restart php-fpm nginx"
             sudo systemctl restart php-fpm nginx
+            echo "==> Deploy done"
           REMOTE
