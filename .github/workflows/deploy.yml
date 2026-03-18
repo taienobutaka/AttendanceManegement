@@ -21,6 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Show run context (原因特定用)
+        run: |
+          echo "=========================================="
+          echo "トリガーしたコミット: ${{ github.sha }}"
+          echo "コミットメッセージ: ${{ github.event.head_commit.message }}"
+          echo "このワークフローには Composer 自動インストールが含まれています。"
+          echo "「composer: command not found」が出る場合は、古い実行を見ている可能性があります。"
+          echo "→ Actions で「最新の実行」を開き、上記コミットが同じか確認してください。"
+          echo "=========================================="
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -51,9 +61,11 @@ jobs:
         env:
           EC2_IP: ${{ steps.ec2.outputs.ip }}
           GITHUB_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
           ssh -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 ec2-user@$EC2_IP << REMOTE
             set -e
+            echo "==> [workflow commit: ${GITHUB_SHA}] (このコミットのワークフローで実行中)"
             echo "==> cd /var/www/html"
             cd /var/www/html || { echo "::error::/var/www/html がありません。EC2 の user_data を確認してください。" && exit 1; }
             if [ ! -d .git ]; then
