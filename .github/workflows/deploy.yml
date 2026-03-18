@@ -27,8 +27,8 @@ jobs:
           echo "トリガーしたコミット: ${{ github.sha }}"
           echo "コミットメッセージ: ${{ github.event.head_commit.message }}"
           echo "このワークフローには Composer 自動インストールが含まれています。"
-          echo "「composer: command not found」が出る場合は、古い実行を見ている可能性があります。"
-          echo "→ Actions で「最新の実行」を開き、上記コミットが同じか確認してください。"
+          echo "※ 「composer: command not found」が出る実行は古いものです。"
+          echo "   → Actions の「Deploy to EC2」で「Run workflow」から手動実行すると最新版が使われます。"
           echo "=========================================="
 
       - name: Configure AWS credentials

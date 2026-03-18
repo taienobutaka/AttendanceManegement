@@ -57,4 +57,7 @@ Laravel アプリ（Atte）の本番環境を AWS に構築します。EC2 1 台
    - `src/**` の変更 → デプロイワークフローが EC2 に SSH して `git pull` → `composer install` → `migrate` → 再起動。
 4. アプリの URL は `terraform output app_url`（例: `http://18.183.250.80`）。初回デプロイ後、数分で表示される。
 
-**デプロイが失敗した場合:** 古い実行の「Re-run」では古いワークフローが使われます。**必ず新しいコミットを push** して新しい実行を起こしてください（例: `git commit --allow-empty -m "ci: trigger deploy" && git push origin main`）。最新のワークフローは EC2 に Composer が無い場合に自動でインストールします。
+**デプロイが失敗し「composer: command not found」と出る場合:** 表示している実行が古いためです。次のどちらかで**最新のワークフロー**でやり直してください。
+
+- **手動実行（推奨）:** GitHub → **Actions** → 左の **「Deploy to EC2」** をクリック → 右側の **「Run workflow」** ドロップダウン → **「Run workflow」** ボタン。これで main の最新ワークフロー（Composer 自動インストール付き）が 1 回実行されます。
+- **push で実行:** 新しいコミットを push すると新しい実行が起きます（例: `git commit --allow-empty -m "ci: trigger deploy" && git push origin main`）。
