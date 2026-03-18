@@ -83,7 +83,7 @@ jobs:
             sudo /usr/local/bin/composer --version || { echo "::error::Composer の確認に失敗しました。" && exit 1; }
             echo "==> cd src && composer install"
             cd src
-            sudo /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
+            sudo COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
             echo "==> migrate"
             sudo /usr/bin/php artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
