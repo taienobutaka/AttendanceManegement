@@ -75,10 +75,8 @@ jobs:
             echo "==> git fetch & reset"
             sudo git fetch origin main
             sudo git reset --hard origin/main
-            echo "==> ensure PHP 8.4 (composer.lock / Laravel と整合)"
-            if ! sudo test -x /usr/bin/php8.4; then
-              sudo dnf install -y php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip
-            fi
+            echo "==> ensure PHP 8.4 のみ（8.5 との衝突は --allowerasing で解消）"
+            sudo dnf install -y php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip --allowerasing
             sudo systemctl stop php-fpm 2>/dev/null || true
             for FPM_WWW in /etc/php-fpm.d/www.conf /etc/php8.4/php-fpm.d/www.conf; do
               if sudo test -f "$FPM_WWW"; then

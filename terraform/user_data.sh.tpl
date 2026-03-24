@@ -6,7 +6,8 @@ export DEBIAN_FRONTEND=noninteractive
 if [ -f /etc/amazon-linux-release ]; then
   dnf update -y
   dnf install -y nginx git \
-    php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip
+    php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip \
+    --allowerasing
   # 既存の php-fpm（別バージョン）があれば止める
   systemctl stop php-fpm 2>/dev/null || true
   systemctl disable php-fpm 2>/dev/null || true
