@@ -29,37 +29,10 @@ curl -sS https://getcomposer.org/installer | "$PHP_BIN"
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer
 
-# アプリ配置ディレクトリ
+# アプリ配置ディレクトリ（git clone はデプロイで実施）
 mkdir -p /var/www/html
 chown -R nginx:nginx /var/www/html 2>/dev/null || true
-
-# .env を配置（デプロイ時に上書き可能）
-mkdir -p /var/www/html/src
-cat > /var/www/html/src/.env << 'ENVFILE'
-APP_NAME=Atte
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=${app_url}
-APP_KEY=${app_key}
-
-LOG_CHANNEL=stack
-LOG_LEVEL=warning
-
-DB_CONNECTION=mysql
-DB_HOST=${db_host}
-DB_PORT=3306
-DB_DATABASE=${db_name}
-DB_USERNAME=${db_username}
-DB_PASSWORD=${db_password}
-
-SESSION_DRIVER=file
-CACHE_DRIVER=file
-QUEUE_CONNECTION=sync
-ENVFILE
-
-# APP_URL を EC2 のパブリック IP に（メタデータから取得）
-PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 || echo "localhost")
-sed -i "s|APP_URL=.*|APP_URL=http://$PUBLIC_IP|" /var/www/html/src/.env
+# .env は GitHub Actions が SSM から組み立てて転送する（初回 clone 後に配置）
 
 # Nginx 設定（Laravel document root: src/public）
 cat > /etc/nginx/conf.d/atte.conf << 'NGINX'

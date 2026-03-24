@@ -12,6 +12,20 @@ fi
 echo "==> git fetch & reset"
 sudo git fetch origin main
 sudo git reset --hard origin/main
+
+echo "==> apply .env from GitHub Actions (SSM 由来)"
+if [ ! -f /tmp/.env.deploy ]; then
+  echo "::error::/tmp/.env.deploy がありません。deploy ワークフローで SSM から生成・scp してください。"
+  exit 1
+fi
+sudo cp /tmp/.env.deploy /var/www/html/src/.env
+sudo chown nginx:nginx /var/www/html/src/.env
+sudo chmod 640 /var/www/html/src/.env
+PUBLIC_IP=$(curl -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/public-ipv4 || true)
+if [ -n "$PUBLIC_IP" ]; then
+  sudo sed -i "s|^APP_URL=.*|APP_URL=http://$PUBLIC_IP|" /var/www/html/src/.env
+fi
+
 echo "==> ensure PHP 8.4 のみ（8.5 との衝突は --allowerasing で解消）"
 sudo dnf install -y php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip --allowerasing
 sudo systemctl stop php-fpm 2>/dev/null || true

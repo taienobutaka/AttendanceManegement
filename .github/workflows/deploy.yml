@@ -8,6 +8,7 @@ on:
     paths:
       - 'src/**'
       - 'scripts/github-deploy-ec2.sh'
+      - 'scripts/build-ec2-env-from-ssm.py'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -57,6 +58,28 @@ jobs:
           chmod 600 ~/.ssh/deploy_key.pem
           head -1 ~/.ssh/deploy_key.pem | grep -q "BEGIN.*PRIVATE KEY" || (echo "::error::SSH_PRIVATE_KEY の形式が不正です。Terraform の ec2_private_key_pem を改行含めてそのまま登録してください。" && exit 1)
           ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      # Terraform の project_name=test, environment=test と一致（変更時は SSM パスを合わせる）
+      - name: Build .env from SSM (RDS + APP_KEY)
+        env:
+          AWS_REGION: ap-northeast-1
+          EC2_IP: ${{ steps.ec2.outputs.ip }}
+          DEPLOY_SSM_PREFIX: /atte/test/deploy
+        run: |
+          set -e
+          python3 "${GITHUB_WORKSPACE}/scripts/build-ec2-env-from-ssm.py" \
+            "${DEPLOY_SSM_PREFIX}" \
+            "${RUNNER_TEMP}/.env.deploy" \
+            --app-url "http://${EC2_IP}"
+          test -s "${RUNNER_TEMP}/.env.deploy"
+
+      - name: Upload .env to EC2
+        env:
+          EC2_IP: ${{ steps.ec2.outputs.ip }}
+        run: |
+          set -e
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 \
+            "${RUNNER_TEMP}/.env.deploy" ec2-user@"${EC2_IP}":/tmp/.env.deploy
 
       - name: Deploy to EC2
         env:
