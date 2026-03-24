@@ -75,20 +75,33 @@ jobs:
             echo "==> git fetch & reset"
             sudo git fetch origin main
             sudo git reset --hard origin/main
-            echo "==> ensure Composer (PATH に依存しない)"
+            echo "==> ensure PHP 8.4 (composer.lock / Laravel と整合)"
+            if ! sudo test -x /usr/bin/php8.4; then
+              sudo dnf install -y php8.4 php8.4-cli php8.4-fpm php8.4-mysqlnd php8.4-xml php8.4-mbstring php8.4-zip
+            fi
+            sudo systemctl stop php-fpm 2>/dev/null || true
+            for FPM_WWW in /etc/php-fpm.d/www.conf /etc/php8.4/php-fpm.d/www.conf; do
+              if sudo test -f "$FPM_WWW"; then
+                sudo sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' "$FPM_WWW"
+              fi
+            done
+            sudo systemctl enable php8.4-fpm 2>/dev/null || true
+            sudo systemctl restart php8.4-fpm
+
+            echo "==> ensure Composer (php8.4 で実行)"
             if ! sudo test -x /usr/local/bin/composer; then
               echo "Installing Composer..."
-              sudo bash -c 'cd /tmp && curl -sS https://getcomposer.org/installer | /usr/bin/php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer'
+              sudo bash -c 'cd /tmp && curl -sS https://getcomposer.org/installer | /usr/bin/php8.4 && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer'
             fi
-            sudo /usr/local/bin/composer --version || { echo "::error::Composer の確認に失敗しました。" && exit 1; }
+            sudo /usr/bin/php8.4 /usr/local/bin/composer --version || { echo "::error::Composer の確認に失敗しました。" && exit 1; }
             echo "==> cd src && composer install"
             cd src
-            sudo COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+            sudo COMPOSER_ALLOW_SUPERUSER=1 /usr/bin/php8.4 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
             echo "==> migrate"
-            sudo /usr/bin/php artisan migrate --force
+            sudo /usr/bin/php8.4 artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
-            echo "==> restart php-fpm nginx"
-            sudo systemctl restart php-fpm nginx
+            echo "==> restart php8.4-fpm nginx"
+            sudo systemctl restart php8.4-fpm nginx
             echo "==> Deploy done"
           REMOTE
