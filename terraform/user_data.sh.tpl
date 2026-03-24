@@ -21,8 +21,11 @@ if [ -f /etc/amazon-linux-release ]; then
   systemctl start php-fpm
 fi
 
-# Composer（PHP 8.4 で実行）
-curl -sS https://getcomposer.org/installer | /usr/bin/php8.4
+# Composer（AL2023 は CLI が /usr/bin/php のみの場合あり）
+PHP_BIN=/usr/bin/php8.4
+[ -x "$PHP_BIN" ] || PHP_BIN=/usr/bin/php
+cd /tmp
+curl -sS https://getcomposer.org/installer | "$PHP_BIN"
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer
 
