@@ -1,5 +1,5 @@
 # アプリを EC2 にデプロイ（git pull → composer → migrate → 再起動）
-# Secrets: AWS_ROLE_ARN, SSH_PRIVATE_KEY, TF_VAR_DB_PASSWORD
+# Secrets: AWS_ROLE_ARN, SSH_PRIVATE_KEY, TF_VAR_DB_PASSWORD（RDS フォールバック時）, LARAVEL_APP_KEY（SSM 未作成時フォールバック）
 name: Deploy to EC2
 
 on:
@@ -59,12 +59,15 @@ jobs:
           head -1 ~/.ssh/deploy_key.pem | grep -q "BEGIN.*PRIVATE KEY" || (echo "::error::SSH_PRIVATE_KEY の形式が不正です。Terraform の ec2_private_key_pem を改行含めてそのまま登録してください。" && exit 1)
           ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      # Terraform の project_name=test, environment=test と一致（変更時は SSM パスを合わせる）
-      - name: Build .env from SSM (RDS + APP_KEY)
+      # SSM が無い場合は RDS API + Secrets（TF_VAR_DB_PASSWORD / LARAVEL_APP_KEY）にフォールバック
+      - name: Build .env (SSM 優先、無ければ RDS + Secrets)
         env:
           AWS_REGION: ap-northeast-1
           EC2_IP: ${{ steps.ec2.outputs.ip }}
           DEPLOY_SSM_PREFIX: /atte/test/deploy
+          DEPLOY_RDS_INSTANCE_ID: atte-test
+          DEPLOY_DB_PASSWORD: ${{ secrets.TF_VAR_DB_PASSWORD }}
+          DEPLOY_LARAVEL_APP_KEY: ${{ secrets.LARAVEL_APP_KEY }}
         run: |
           set -e
           python3 "${GITHUB_WORKSPACE}/scripts/build-ec2-env-from-ssm.py" \

@@ -28,7 +28,8 @@ Laravel アプリ（Atte）の本番環境を AWS に構築します。EC2 1 台
 3. **GitHub Secrets の登録**
 
    - `AWS_ROLE_ARN`: 出力の `github_actions_role_arn` をコピーして登録
-   - `TF_VAR_DB_PASSWORD`: RDS マスターパスワード（Terraform で使う値と同じ）
+   - `TF_VAR_DB_PASSWORD`: RDS マスターパスワード（Terraform で使う値と同じ。デプロイの RDS フォールバックでも使用）
+   - `LARAVEL_APP_KEY`（推奨）: `terraform output -raw laravel_app_key`。**SSM `/…/deploy/*` が未作成のとき**デプロイがこれで `.env` の APP_KEY を埋めます
    - `SSH_PRIVATE_KEY`: 出力の `ec2_private_key_pem`（Terraform でキー作成した場合）をそのまま登録
 
 4. **アプリ URL**
@@ -52,11 +53,13 @@ Laravel アプリ（Atte）の本番環境を AWS に構築します。EC2 1 台
    - `AWS_ROLE_ARN`: `terraform output -raw github_actions_role_arn` の値
    - `SSH_PRIVATE_KEY`: `terraform output -raw ec2_private_key_pem` の値（改行含めてそのまま）
    - `TF_VAR_DB_PASSWORD`: `terraform.tfvars` の `db_password` と同じ値
+   - `LARAVEL_APP_KEY`: `terraform output -raw laravel_app_key`（SSM 未 apply 時のデプロイ用・任意だが未設定だとフォールバック不可）
 3. **main ブランチに push** する。
    - `terraform/**` の変更 → Terraform ワークフローが plan（手動で Apply 可能）。
    - `src/**` の変更 → デプロイワークフローが EC2 に SSH して `git pull` → **SSM から取得した RDS 情報で `src/.env` を配置** → `composer install` → `migrate` → 再起動。
-4. **`terraform apply` で SSM パラメータ**（`/プロジェクト名/環境名/deploy/*`）が作成されます。`.github/workflows/deploy.yml` の `DEPLOY_SSM_PREFIX`（既定 `/atte/test/deploy`）を、`terraform output deploy_ssm_prefix` の値と一致させてください（`project_name` / `environment` を変えた場合）。
-5. アプリの URL は `terraform output app_url`（例: `http://18.183.250.80`）。初回デプロイ後、数分で表示される。
+4. **`terraform apply` で SSM パラメータ**（`/プロジェクト名/環境名/deploy/*`）が作成されます。未作成のままデプロイする場合は、GitHub Secrets に **`TF_VAR_DB_PASSWORD`**（RDS パスワード）と **`LARAVEL_APP_KEY`**（`terraform output -raw laravel_app_key`）を追加すると、Actions が RDS API からエンドポイントを取得して `.env` を組み立てます（フォールバック）。
+5. `.github/workflows/deploy.yml` の `DEPLOY_SSM_PREFIX`（既定 `/atte/test/deploy`）と `DEPLOY_RDS_INSTANCE_ID`（既定 `atte-test`）を、`terraform output deploy_ssm_prefix` および RDS identifier（`project_name-environment`）と一致させてください。
+6. アプリの URL は `terraform output app_url`（例: `http://18.183.250.80`）。初回デプロイ後、数分で表示される。
 
 **PHP バージョン:** EC2 は **PHP 8.4**（`composer.lock` の nette 等と整合）。既存インスタンスは次回デプロイ時に Actions が `php8.4` パッケージを入れ切り替えます。user_data のみ更新したい場合は EC2 を再作成するか、`ec2.tf` の `lifecycle.ignore_changes` を外して `terraform apply` してください。
 

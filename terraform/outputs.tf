@@ -40,3 +40,9 @@ output "deploy_ssm_prefix" {
   description = "デプロイ用 .env 生成に使う SSM パラメータのプレフィックス（deploy.yml の DEPLOY_SSM_PREFIX と一致させる）"
   value       = "/${var.project_name}/${var.environment}/deploy"
 }
+
+output "laravel_app_key" {
+  description = "Laravel APP_KEY（user_data / SSM と同一）。SSM 未作成時は GitHub Secret LARAVEL_APP_KEY に登録"
+  value       = local.app_key_base64
+  sensitive   = true
+}
