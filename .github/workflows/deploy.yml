@@ -83,8 +83,9 @@ jobs:
                 sudo sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' "$FPM_WWW"
               fi
             done
-            sudo systemctl enable php8.4-fpm 2>/dev/null || true
-            sudo systemctl restart php8.4-fpm
+            sudo systemctl daemon-reload
+            sudo systemctl enable php-fpm 2>/dev/null || true
+            sudo systemctl restart php-fpm
 
             echo "==> ensure Composer (php8.4 で実行)"
             if ! sudo test -x /usr/local/bin/composer; then
@@ -99,7 +100,7 @@ jobs:
             sudo /usr/bin/php8.4 artisan migrate --force
             sudo chown -R nginx:nginx storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
-            echo "==> restart php8.4-fpm nginx"
-            sudo systemctl restart php8.4-fpm nginx
+            echo "==> restart php-fpm nginx"
+            sudo systemctl restart php-fpm nginx
             echo "==> Deploy done"
           REMOTE

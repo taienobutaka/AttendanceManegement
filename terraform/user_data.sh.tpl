@@ -17,8 +17,8 @@ if [ -f /etc/amazon-linux-release ]; then
       sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' "$FPM_WWW"
     fi
   done
-  systemctl enable nginx php8.4-fpm
-  systemctl start php8.4-fpm
+  systemctl enable nginx php-fpm
+  systemctl start php-fpm
 fi
 
 # Composer（PHP 8.4 で実行）
@@ -78,4 +78,4 @@ NGINX
 
 rm -f /etc/nginx/conf.d/default.conf 2>/dev/null || true
 systemctl start nginx
-systemctl restart nginx php8.4-fpm 2>/dev/null || true
+systemctl restart nginx php-fpm 2>/dev/null || true
