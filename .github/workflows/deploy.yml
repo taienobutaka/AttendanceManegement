@@ -1,5 +1,6 @@
 # アプリを EC2 にデプロイ（git pull → composer → migrate → 再起動）
 # Secrets: AWS_ROLE_ARN, SSH_PRIVATE_KEY, TF_VAR_DB_PASSWORD（RDS フォールバック時）, LARAVEL_APP_KEY（SSM 未作成時フォールバック）
+# SSM /atte/test/deploy/* は Terraform で作成（フル plan で EC2 が差し替わる場合は -target で SSM のみ apply 可）
 name: Deploy to EC2
 
 on:
