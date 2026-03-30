@@ -15,6 +15,8 @@ if [ -f /etc/amazon-linux-release ]; then
   for FPM_WWW in /etc/php-fpm.d/www.conf /etc/php8.4/php-fpm.d/www.conf; do
     if [ -f "$FPM_WWW" ]; then
       sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' "$FPM_WWW"
+      sed -i 's/^user = .*/user = nginx/' "$FPM_WWW"
+      sed -i 's/^group = .*/group = nginx/' "$FPM_WWW"
     fi
   done
   systemctl enable nginx php-fpm

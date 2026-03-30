@@ -32,6 +32,9 @@ sudo systemctl stop php-fpm 2>/dev/null || true
 for FPM_WWW in /etc/php-fpm.d/www.conf /etc/php8.4/php-fpm.d/www.conf; do
   if sudo test -f "$FPM_WWW"; then
     sudo sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' "$FPM_WWW"
+    # AL2023 既定は apache 等のことが多く、storage を nginx 所有にすると書き込みで 500 になる
+    sudo sed -i 's/^user = .*/user = nginx/' "$FPM_WWW"
+    sudo sed -i 's/^group = .*/group = nginx/' "$FPM_WWW"
   fi
 done
 sudo systemctl daemon-reload
@@ -82,8 +85,9 @@ cd src
 sudo COMPOSER_ALLOW_SUPERUSER=1 "$PHP_CLI" /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
 echo "==> migrate"
 sudo "$PHP_CLI" artisan migrate --force
-sudo chown -R nginx:nginx storage bootstrap/cache
-sudo chmod -R 775 storage bootstrap/cache
+echo "==> ownership for nginx + php-fpm (vendor 含む)"
+sudo chown -R nginx:nginx /var/www/html
+sudo chmod -R 775 /var/www/html/src/storage /var/www/html/src/bootstrap/cache
 echo "==> restart php-fpm nginx"
 sudo systemctl restart php-fpm nginx
 echo "==> Deploy done"
