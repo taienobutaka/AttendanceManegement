@@ -124,6 +124,20 @@ def dotenv_quote(value: str) -> str:
     return f'"{escaped}"'
 
 
+def inject_openai_api_key(prefix: str, vals: dict[str, str]) -> None:
+    """SSM の openai_api_key、なければ環境変数 DEPLOY_OPENAI_API_KEY を .env 用に取り込む。"""
+    if vals.get("openai_api_key"):
+        return
+    p = prefix.rstrip("/")
+    o = aws_ssm_get_optional(f"{p}/openai_api_key", decrypt=True)
+    if o:
+        vals["openai_api_key"] = o
+        return
+    env_o = os.environ.get("DEPLOY_OPENAI_API_KEY", "").strip()
+    if env_o:
+        vals["openai_api_key"] = env_o
+
+
 def write_env(
     out_path: str, vals: dict[str, str], app_url: str, source: str
 ) -> None:
@@ -148,6 +162,10 @@ def write_env(
         "CACHE_DRIVER=file",
         "QUEUE_CONNECTION=sync",
     ]
+    if vals.get("openai_api_key"):
+        lines.extend(
+            ["", f"OPENAI_API_KEY={dotenv_quote(vals['openai_api_key'])}"]
+        )
     out = "\n".join(lines) + "\n"
     out_abs = os.path.abspath(out_path)
     out_dir = os.path.dirname(out_abs)
@@ -177,6 +195,7 @@ def main() -> int:
         source = "rds_fallback"
 
     app_url = args.app_url or "http://PLACEHOLDER_UPDATE_AFTER_DEPLOY"
+    inject_openai_api_key(args.prefix, vals)
     write_env(args.out_path, vals, app_url, source)
     return 0
 

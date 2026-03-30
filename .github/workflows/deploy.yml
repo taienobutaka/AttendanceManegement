@@ -69,6 +69,7 @@ jobs:
           DEPLOY_RDS_INSTANCE_ID: atte-test
           DEPLOY_DB_PASSWORD: ${{ secrets.TF_VAR_DB_PASSWORD }}
           DEPLOY_LARAVEL_APP_KEY: ${{ secrets.LARAVEL_APP_KEY }}
+          DEPLOY_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -e
           python3 "${GITHUB_WORKSPACE}/scripts/build-ec2-env-from-ssm.py" \

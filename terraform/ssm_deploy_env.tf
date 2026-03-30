@@ -37,3 +37,12 @@ resource "aws_ssm_parameter" "deploy_laravel_app_key" {
   type        = "SecureString"
   value       = local.app_key_base64
 }
+
+# OpenAI（チャットボット）。空のときはパラメータを作らない（AWS CLI で手動投入可）
+resource "aws_ssm_parameter" "deploy_openai_api_key" {
+  count       = var.openai_api_key != "" ? 1 : 0
+  name        = "${local.deploy_ssm_prefix}/openai_api_key"
+  description = "OpenAI API key for Laravel OPENAI_API_KEY (chatbot)"
+  type        = "SecureString"
+  value       = var.openai_api_key
+}

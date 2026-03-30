@@ -26,4 +26,15 @@ yarn-error.log
 /.vscode
 
 # Docker MySQL data directory
-docker/mysql/data/src/node_modules/
+docker/mysql/data/
+
+# 一時ファイル（API キー投入用・コミット禁止）
+scripts/_local_openai.txt
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+*.tfstate
+*.tfstate.*
+.bin/src/node_modules/
