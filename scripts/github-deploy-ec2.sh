@@ -5,6 +5,10 @@ set -euo pipefail
 echo "==> [workflow commit: ${GITHUB_SHA}] (このコミットのワークフローで実行中)"
 echo "==> cd /var/www/html"
 cd /var/www/html || { echo "::error::/var/www/html がありません。EC2 の user_data を確認してください。" && exit 1; }
+echo "==> git safe.directory（リポジトリが nginx 所有のため root の sudo git が拒否されるのを防ぐ）"
+if ! sudo git config --system --get-all safe.directory 2>/dev/null | grep -qxF '/var/www/html'; then
+  sudo git config --system --add safe.directory /var/www/html
+fi
 if [ ! -d .git ]; then
   echo "==> git clone (初回)"
   sudo git clone -b main "https://github.com/${GITHUB_REPO}.git" .
