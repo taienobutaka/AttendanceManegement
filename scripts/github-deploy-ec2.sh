@@ -3,19 +3,18 @@
 set -euo pipefail
 
 echo "==> [workflow commit: ${GITHUB_SHA}] (このコミットのワークフローで実行中)"
-echo "==> cd /var/www/html"
-cd /var/www/html || { echo "::error::/var/www/html がありません。EC2 の user_data を確認してください。" && exit 1; }
-echo "==> git safe.directory（リポジトリが nginx 所有のため root の sudo git が拒否されるのを防ぐ）"
-if ! sudo git config --system --get-all safe.directory 2>/dev/null | grep -qxF '/var/www/html'; then
-  sudo git config --system --add safe.directory /var/www/html
-fi
+REPO_ROOT=/var/www/html
+echo "==> cd ${REPO_ROOT}"
+cd "${REPO_ROOT}" || { echo "::error::${REPO_ROOT} がありません。EC2 の user_data を確認してください。" && exit 1; }
+# nginx 所有のリポジトリを root が操作するため Git 2.35+ の dubious ownership を毎コマンドで回避（--system 設定が効かない環境がある）
+GIT_SAFE=(git -c safe.directory="${REPO_ROOT}")
 if [ ! -d .git ]; then
   echo "==> git clone (初回)"
-  sudo git clone -b main "https://github.com/${GITHUB_REPO}.git" .
+  sudo "${GIT_SAFE[@]}" clone -b main "https://github.com/${GITHUB_REPO}.git" .
 fi
 echo "==> git fetch & reset"
-sudo git fetch origin main
-sudo git reset --hard origin/main
+sudo "${GIT_SAFE[@]}" fetch origin main
+sudo "${GIT_SAFE[@]}" reset --hard origin/main
 
 echo "==> apply .env from GitHub Actions (SSM 由来)"
 if [ ! -f /tmp/.env.deploy ]; then
