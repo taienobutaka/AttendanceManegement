@@ -111,6 +111,9 @@ sudo COMPOSER_ALLOW_SUPERUSER=1 "$PHP_CLI" /usr/local/bin/composer install --no-
 echo "==> migrate"
 sudo "$PHP_CLI" artisan migrate --force
 
+echo "==> demo login user (README の yamada@example.com / password を冪等で確保)"
+sudo "$PHP_CLI" artisan db:seed --class=DemoLoginUserSeeder --force
+
 echo "==> ownership for nginx + php-fpm (vendor 含む)"
 sudo chown -R nginx:nginx "${REPO_ROOT}"
 sudo chmod -R 775 "${SRC_DIR}/storage" "${SRC_DIR}/bootstrap/cache"
