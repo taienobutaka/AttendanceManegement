@@ -41,6 +41,16 @@ sudo systemctl daemon-reload
 sudo systemctl enable php-fpm 2>/dev/null || true
 sudo systemctl restart php-fpm
 
+echo "==> SELinux: php-fpm から DB 外向き接続を許可（Enforcing かつ未 ON のときのみ -P）"
+if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce 2>/dev/null)" = "Enforcing" ]; then
+  if getsebool httpd_can_network_connect_db 2>/dev/null | grep -q 'off$'; then
+    sudo setsebool -P httpd_can_network_connect_db 1
+  fi
+  if getsebool httpd_can_network_connect 2>/dev/null | grep -q 'off$'; then
+    sudo setsebool -P httpd_can_network_connect 1
+  fi
+fi
+
 echo "==> ensure nginx vhost（Laravel / user_data 未反映時のデフォルトページを防ぐ）"
 sudo tee /etc/nginx/conf.d/atte.conf > /dev/null <<'NGINX_ATTE'
 server {
@@ -82,12 +92,16 @@ fi
 sudo "$PHP_CLI" /usr/local/bin/composer --version || { echo "::error::Composer の確認に失敗しました。" && exit 1; }
 echo "==> cd src && composer install"
 cd src
+echo "==> ensure Laravel storage dirs"
+sudo mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs bootstrap/cache
 sudo COMPOSER_ALLOW_SUPERUSER=1 "$PHP_CLI" /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
 echo "==> migrate"
 sudo "$PHP_CLI" artisan migrate --force
 echo "==> ownership for nginx + php-fpm (vendor 含む)"
 sudo chown -R nginx:nginx /var/www/html
 sudo chmod -R 775 /var/www/html/src/storage /var/www/html/src/bootstrap/cache
+echo "==> clear caches (FPM と同じユーザー)"
+sudo -u nginx env HOME=/var/lib/nginx "$PHP_CLI" /var/www/html/src/artisan optimize:clear 2>/dev/null || true
 echo "==> restart php-fpm nginx"
 sudo systemctl restart php-fpm nginx
 echo "==> Deploy done"

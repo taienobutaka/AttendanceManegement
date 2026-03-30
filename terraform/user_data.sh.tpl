@@ -21,6 +21,10 @@ if [ -f /etc/amazon-linux-release ]; then
   done
   systemctl enable nginx php-fpm
   systemctl start php-fpm
+  if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce 2>/dev/null)" = "Enforcing" ]; then
+    setsebool -P httpd_can_network_connect_db 1 2>/dev/null || true
+    setsebool -P httpd_can_network_connect 1 2>/dev/null || true
+  fi
 fi
 
 # Composer（AL2023 は CLI が /usr/bin/php のみの場合あり）
