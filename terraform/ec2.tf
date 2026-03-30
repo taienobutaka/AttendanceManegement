@@ -11,14 +11,14 @@ resource "aws_key_pair" "generated" {
   public_key = tls_private_key.ec2[0].public_key_openssh
 }
 
-# Laravel APP_KEY 用のランダム文字列（base64 風）
-resource "random_password" "app_key" {
-  length  = 44
-  special = false
+# Laravel APP_KEY: 「base64:」+ 32 バイト乱数の標準 Base64（php artisan key:generate と同形式）
+# random_password の英数字 44 文字は Base64 デコード後 32 バイトにならず Encrypter が落ちるため使わない
+resource "random_id" "laravel_app_key" {
+  byte_length = 32
 }
 
 locals {
-  app_key_base64 = "base64:${random_password.app_key.result}"
+  app_key_base64 = "base64:${random_id.laravel_app_key.b64_std}"
   key_name       = var.key_name != "" ? var.key_name : aws_key_pair.generated[0].key_name
 }
 
