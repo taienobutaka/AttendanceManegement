@@ -17,7 +17,9 @@ class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        // Fortify の HTTP ルートは登録しない（web.php の Auth/Register と二重になり、
+        // 先に登録された Fortify 側がマッチして LoginViewResponse 未設定で 500 になるため）
+        Fortify::ignoreRoutes();
     }
 
     public function boot(): void
