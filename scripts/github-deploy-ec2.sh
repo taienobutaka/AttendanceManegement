@@ -69,6 +69,9 @@ if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce 2>/dev/null)" = "Enf
   sudo setsebool -P httpd_can_network_connect_db 1
   sudo setsebool -P httpd_can_network_connect 1
   echo "SELinux=$(getenforce) httpd_can_network_connect_db=$(getsebool -n httpd_can_network_connect_db 2>/dev/null || echo '?')"
+  echo "==> SELinux: storage / bootstrap/cache を書き込み可能コンテキストに設定"
+  sudo chcon -R -t httpd_sys_rw_content_t "${SRC_DIR}/storage"
+  sudo chcon -R -t httpd_sys_rw_content_t "${SRC_DIR}/bootstrap/cache"
 fi
 
 echo "==> ensure nginx vhost（Laravel document root）"
@@ -119,6 +122,12 @@ sudo chown -R nginx:nginx "${REPO_ROOT}"
 sudo chmod -R 775 "${SRC_DIR}/storage" "${SRC_DIR}/bootstrap/cache"
 sudo chmod 664 "${SRC_DIR}/storage/logs/laravel.log" 2>/dev/null || true
 
+echo "==> SELinux: chown 後に書き込みコンテキストを再適用"
+if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce 2>/dev/null)" = "Enforcing" ]; then
+  sudo chcon -R -t httpd_sys_rw_content_t "${SRC_DIR}/storage"
+  sudo chcon -R -t httpd_sys_rw_content_t "${SRC_DIR}/bootstrap/cache"
+fi
+
 echo "==> clear caches (FPM と同じユーザー)"
 sudo -u nginx env HOME="${REPO_ROOT}" "$PHP_CLI" "${SRC_DIR}/artisan" optimize:clear 2>/dev/null || true
 
@@ -131,6 +140,19 @@ sudo systemctl restart php-fpm nginx
 echo "==> post-deploy: localhost HTTP + ログ（500 の直接原因を Actions に出力）"
 CODE=$(curl -s -o /tmp/__atte_curl_body.txt -w "%{http_code}" http://127.0.0.1/ || echo "000")
 echo "curl_http_code=${CODE}"
+
+echo "==> post-deploy: セッション書き込みテスト"
+echo "sessions dir: $(ls -ldZ "${SRC_DIR}/storage/framework/sessions/" 2>/dev/null || echo 'missing')"
+sudo -u nginx touch "${SRC_DIR}/storage/framework/sessions/__test_write" 2>&1 && echo "session write: OK" && sudo rm -f "${SRC_DIR}/storage/framework/sessions/__test_write" || echo "::warning::session write: FAILED (セッションファイルを書き込めません)"
+
+echo "==> post-deploy: CSRF token が空でないか確認"
+CSRF_TOKEN=$(curl -s http://127.0.0.1/login | grep -oP 'name="_token"\s+value="\K[^"]+' || true)
+if [ -z "$CSRF_TOKEN" ]; then
+  echo "::warning::CSRF token が空です。セッション保存に問題があります。"
+else
+  echo "CSRF token: OK (${#CSRF_TOKEN} chars)"
+fi
+
 if [ "${CODE}" != "200" ] && [ "${CODE}" != "302" ] && [ "${CODE}" != "301" ]; then
   echo "::warning::127.0.0.1 の応答が ${CODE}（200/302/301 以外はアプリまたは FPM エラーの可能性）"
   echo "---- response body (先頭 4000 文字) ----"
