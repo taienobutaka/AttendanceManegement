@@ -14,6 +14,7 @@ class ResetSessionAtMidnight
 
         if ($lastAccessDate !== $currentDate) {
             Session::flush();
+            Session::regenerateToken();
             Session::put('attendance_started', 'false');
             Session::put('rest_started', 'false');
             Session::put('all_disabled', 'false');
