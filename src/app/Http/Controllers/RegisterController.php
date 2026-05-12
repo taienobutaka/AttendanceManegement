@@ -24,10 +24,14 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // 認証メールを送信
-        Mail::to($user->email)->send(new AttendanceInputLink($user));
+        try {
+            Mail::to($user->email)->send(new AttendanceInputLink($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Registration mail failed: ' . $e->getMessage());
+        }
 
-        // メッセージをセッションに保存
-        return back()->with('message', 'メールを送信しました。');
+        Auth::login($user);
+
+        return redirect('/');
     }
 }

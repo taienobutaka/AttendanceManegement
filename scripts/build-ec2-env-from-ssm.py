@@ -161,6 +161,8 @@ def write_env(
         "SESSION_DRIVER=file",
         "CACHE_DRIVER=file",
         "QUEUE_CONNECTION=sync",
+        "",
+        "MAIL_MAILER=log",
     ]
     if vals.get("openai_api_key"):
         lines.extend(
